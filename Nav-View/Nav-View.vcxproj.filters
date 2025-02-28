@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>qrc;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Translation Files">
+      <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
+      <Extensions>ts</Extensions>
+    </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>qml;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Src\GUI">
+      <UniqueIdentifier>{27040a35-63c6-40d2-a06d-358c2e62051a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Manager">
+      <UniqueIdentifier>{d4f036bc-a789-4686-85aa-b1008ae28290}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Thread">
+      <UniqueIdentifier>{e7d7730b-3075-4353-9462-57e481eab42d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Thread\Base">
+      <UniqueIdentifier>{e149ddd8-bc8c-4e35-a5e1-4a7c42210ed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decoder">
+      <UniqueIdentifier>{a912ce19-3f7c-40cf-a10a-60d69c1f0003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decoder\Common">
+      <UniqueIdentifier>{10ad9297-b0d0-4b31-baab-d7bec27ecf38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decoder\Decode">
+      <UniqueIdentifier>{ae3c84d1-b27f-4dd1-8d5c-153cdc5b43d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Custom">
+      <UniqueIdentifier>{8ad88582-d3dd-4348-960d-d1f2658bd248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd">
+      <UniqueIdentifier>{034f7477-cd7a-46b0-bb52-46fac65abdbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rd\qcustomplot">
+      <UniqueIdentifier>{0b0b9861-0141-47d2-88c2-cd106e807fdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\GUI\Plot">
+      <UniqueIdentifier>{c5a2eb48-a2a6-4e6a-a853-683fbac52322}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\WinMain">
+      <UniqueIdentifier>{3fe9e44c-c69d-4d01-826e-9e542e1a6865}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="NavView.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\GUI\SerialportWidget.cpp">
+      <Filter>Src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\ConfigFile.cpp">
+      <Filter>Src\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\DataCache.cpp">
+      <Filter>Src\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\LogManager.cpp">
+      <Filter>Src\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Manager\ThreadManager.cpp">
+      <Filter>Src\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Thread\DataParser.cpp">
+      <Filter>Src\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Thread\SerialThread.cpp">
+      <Filter>Src\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Thread\Base\WorkerBase.cpp">
+      <Filter>Src\Thread\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\LogFilePath.cpp">
+      <Filter>Src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\UnitConfiguration.cpp">
+      <Filter>Src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rd\qcustomplot\qcustomplot.cpp">
+      <Filter>3rd\qcustomplot</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Plot\widgetplot2d.cpp">
+      <Filter>Src\GUI\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Plot\Graph.cpp">
+      <Filter>Src\GUI\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Plot\MonitorBar.cpp">
+      <Filter>Src\GUI\Plot</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\FieldSettings.cpp">
+      <Filter>Src\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinMain\main.cpp">
+      <Filter>Src\WinMain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinMain\NavView.cpp">
+      <Filter>Src\WinMain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Decoder\common\FileManager.cpp">
+      <Filter>Decoder\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Decoder\decoders\imu_330\IMU330_Decoder.cpp">
+      <Filter>Decoder\Decode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="src\GUI\SerialportWidget.ui">
+      <Filter>Src\GUI</Filter>
+    </QtUic>
+    <QtUic Include="src\GUI\LogFilePath.ui">
+      <Filter>Src\GUI</Filter>
+    </QtUic>
+    <QtUic Include="src\GUI\UnitConfiguration.ui">
+      <Filter>Src\GUI</Filter>
+    </QtUic>
+    <QtUic Include="src\GUI\Plot\widgetplot2d.ui">
+      <Filter>Src\GUI\Plot</Filter>
+    </QtUic>
+    <QtUic Include="src\GUI\Plot\Graph.ui">
+      <Filter>Src\GUI\Plot</Filter>
+    </QtUic>
+    <QtUic Include="src\GUI\Plot\MonitorBar.ui">
+      <Filter>Src\GUI\Plot</Filter>
+    </QtUic>
+    <QtUic Include="src\WinMain\NavView.ui">
+      <Filter>Src\WinMain</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\GUI\SerialportWidget.h">
+      <Filter>Src\GUI</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Manager\ConfigFile.h">
+      <Filter>Src\Manager</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Manager\LogManager.h">
+      <Filter>Src\Manager</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Manager\ThreadManager.h">
+      <Filter>Src\Manager</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Thread\DataParser.h">
+      <Filter>Src\Thread</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Thread\SerialThread.h">
+      <Filter>Src\Thread</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Thread\Base\WorkerBase.h">
+      <Filter>Src\Thread\Base</Filter>
+    </QtMoc>
+    <QtMoc Include="src\GUI\LogFilePath.h">
+      <Filter>Src\GUI</Filter>
+    </QtMoc>
+    <QtMoc Include="src\GUI\UnitConfiguration.h">
+      <Filter>Src\GUI</Filter>
+    </QtMoc>
+    <QtMoc Include="..\3rd\qcustomplot\qcustomplot.h">
+      <Filter>3rd\qcustomplot</Filter>
+    </QtMoc>
+    <QtMoc Include="src\GUI\Plot\widgetplot2d.h">
+      <Filter>Src\GUI\Plot</Filter>
+    </QtMoc>
+    <QtMoc Include="src\GUI\Plot\Graph.h">
+      <Filter>Src\GUI\Plot</Filter>
+    </QtMoc>
+    <QtMoc Include="src\GUI\Plot\MonitorBar.h">
+      <Filter>Src\GUI\Plot</Filter>
+    </QtMoc>
+    <QtMoc Include="src\GUI\FieldSettings.h">
+      <Filter>Src\GUI</Filter>
+    </QtMoc>
+    <QtMoc Include="src\WinMain\NavView.h">
+      <Filter>Src\WinMain</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Manager\DataCache.h">
+      <Filter>Src\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Custom\CustomMdiSubWindow.h">
+      <Filter>Src\Custom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Decoder\common\FileManager.h">
+      <Filter>Decoder\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Decoder\decoders\imu_330\imu_330.h">
+      <Filter>Decoder\Decode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Decoder\decoders\imu_330\IMU330_Decoder.h">
+      <Filter>Decoder\Decode</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\style.css">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

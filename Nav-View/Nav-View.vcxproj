@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{76C3C9B0-5612-4719-AB42-19A5D793A3C7}</ProjectGuid>
+    <Keyword>QtVS_v304</Keyword>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
+    <Import Project="$(QtMsBuild)\qt_defaults.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
+    <QtInstall>Qt5.14.2</QtInstall>
+    <QtModules>core;gui;widgets;serialport;printsupport</QtModules>
+    <QtBuildConfig>debug</QtBuildConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
+    <QtInstall>Qt5.14.2</QtInstall>
+    <QtModules>core;gui;widgets;serialport;printsupport</QtModules>
+    <QtBuildConfig>release</QtBuildConfig>
+  </PropertyGroup>
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../Decoder/common;../Decoder/decoders;../3rd/qextserialport/inc;../3rd/qcustomplot;./src/Thread;./src/Manager;./src/Custom;./src/GUI;./src/WinMain;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;REALTIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>../3rd/qextserialport/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Qt5ExtSerialPortd1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>../Decoder/common;../Decoder/decoders;../3rd/qextserialport/inc;../3rd/qcustomplot;./src/Thread;./src/Manager;./src/Custom;./src/GUI;./src/WinMain;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;REALTIME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>../3rd/qextserialport/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Qt5ExtSerialPort1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\3rd\qcustomplot\qcustomplot.cpp" />
+    <ClCompile Include="..\Decoder\common\FileManager.cpp" />
+    <ClCompile Include="..\Decoder\decoders\imu_330\IMU330_Decoder.cpp" />
+    <ClCompile Include="src\GUI\FieldSettings.cpp" />
+    <ClCompile Include="src\GUI\LogFilePath.cpp" />
+    <ClCompile Include="src\GUI\Plot\Graph.cpp" />
+    <ClCompile Include="src\GUI\Plot\MonitorBar.cpp" />
+    <ClCompile Include="src\GUI\Plot\widgetplot2d.cpp" />
+    <ClCompile Include="src\GUI\SerialportWidget.cpp" />
+    <ClCompile Include="src\GUI\UnitConfiguration.cpp" />
+    <ClCompile Include="src\Manager\ConfigFile.cpp" />
+    <ClCompile Include="src\Manager\DataCache.cpp" />
+    <ClCompile Include="src\Manager\LogManager.cpp" />
+    <ClCompile Include="src\Manager\ThreadManager.cpp" />
+    <ClCompile Include="src\Thread\Base\WorkerBase.cpp" />
+    <ClCompile Include="src\Thread\DataParser.cpp" />
+    <ClCompile Include="src\Thread\SerialThread.cpp" />
+    <ClCompile Include="src\WinMain\main.cpp" />
+    <ClCompile Include="src\WinMain\NavView.cpp" />
+    <QtRcc Include="NavView.qrc" />
+    <QtUic Include="src\GUI\LogFilePath.ui" />
+    <QtUic Include="src\GUI\Plot\Graph.ui" />
+    <QtUic Include="src\GUI\Plot\MonitorBar.ui" />
+    <QtUic Include="src\GUI\Plot\widgetplot2d.ui" />
+    <QtUic Include="src\GUI\SerialportWidget.ui" />
+    <QtUic Include="src\GUI\UnitConfiguration.ui" />
+    <QtUic Include="src\WinMain\NavView.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\GUI\SerialportWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\Manager\ConfigFile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\WinMain\NavView.h" />
+    <QtMoc Include="..\3rd\qcustomplot\qcustomplot.h" />
+    <QtMoc Include="src\GUI\LogFilePath.h" />
+    <QtMoc Include="src\GUI\UnitConfiguration.h" />
+    <QtMoc Include="src\GUI\Plot\widgetplot2d.h" />
+    <QtMoc Include="src\GUI\Plot\Graph.h" />
+    <QtMoc Include="src\GUI\Plot\MonitorBar.h" />
+    <QtMoc Include="src\GUI\FieldSettings.h" />
+    <ClInclude Include="..\Decoder\common\FileManager.h" />
+    <ClInclude Include="..\Decoder\decoders\imu_330\IMU330_Decoder.h" />
+    <ClInclude Include="..\Decoder\decoders\imu_330\imu_330.h" />
+    <ClInclude Include="src\Custom\CustomMdiSubWindow.h" />
+    <ClInclude Include="src\Manager\DataCache.h" />
+    <QtMoc Include="src\Thread\Base\WorkerBase.h" />
+    <QtMoc Include="src\Thread\SerialThread.h" />
+    <QtMoc Include="src\Thread\DataParser.h" />
+    <QtMoc Include="src\Manager\ThreadManager.h" />
+    <QtMoc Include="src\Manager\LogManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\style.css" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
