@@ -25,6 +25,7 @@ public:
     void close_all_files();
     void create_file(FILE*& file, const char* suffix, const char* title);
     FILE* get_file(std::string suffix, std::string title);
+    bool has_file(std::string suffix);
 
 private:
     char base_file_name[1024];

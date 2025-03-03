@@ -51,33 +51,25 @@ typedef struct {
     int32_t gyro_y;
     int32_t gyro_z;
     int32_t temperature;
-    int32_t accel2_x;
-    int32_t accel2_y;
-    int32_t accel2_z;
-    int32_t gyro2_x;
-    int32_t gyro2_y;
-    int32_t gyro2_z;
-    int32_t temperature2;
-    uint16_t counter;  // [unitless]
 } IMU_330_IMU_RAWCOUNTS;
 
-typedef struct {
-    float accel_x;      // [m/s/s]
-    float accel_y;      // [m/s/s]
-    float accel_z;      // [m/s/s]
-    float gyro_x;       // [deg/s]
-    float gyro_y;       // [deg/s]
-    float gyro_z;       // [deg/s]
-    float temperature;  // [¡æ]
-    float accel2_x;      // [m/s/s]
-    float accel2_y;      // [m/s/s]
-    float accel2_z;      // [m/s/s]
-    float gyro2_x;       // [deg/s]
-    float gyro2_y;       // [deg/s]
-    float gyro2_z;       // [deg/s]
-    float temperature2;  // [¡æ]
-    uint16_t counter;  // [unitless]
-} IMU_330_IMU_SCALEDS;
+//typedef struct {
+//    int32_t accel_x;
+//    int32_t accel_y;
+//    int32_t accel_z;
+//    int32_t gyro_x;
+//    int32_t gyro_y;
+//    int32_t gyro_z;
+//    int32_t temperature;
+//    int32_t accel2_x;
+//    int32_t accel2_y;
+//    int32_t accel2_z;
+//    int32_t gyro2_x;
+//    int32_t gyro2_y;
+//    int32_t gyro2_z;
+//    int32_t temperature2;
+//    uint16_t counter;  // [unitless]
+//} IMU_330_IMU_RAWCOUNTS;
 
 typedef struct {
     float accel_x;      // [m/s/s]
@@ -87,15 +79,53 @@ typedef struct {
     float gyro_y;       // [deg/s]
     float gyro_z;       // [deg/s]
     float temperature;  // [¡æ]
-    float accel2_x;      // [m/s/s]
-    float accel2_y;      // [m/s/s]
-    float accel2_z;      // [m/s/s]
-    float gyro2_x;       // [deg/s]
-    float gyro2_y;       // [deg/s]
-    float gyro2_z;       // [deg/s]
-    float temperature2;  // [¡æ]
-    uint16_t counter;  // [unitless]
+} IMU_330_IMU_SCALEDS;
+
+//typedef struct {
+//    float accel_x;      // [m/s/s]
+//    float accel_y;      // [m/s/s]
+//    float accel_z;      // [m/s/s]
+//    float gyro_x;       // [deg/s]
+//    float gyro_y;       // [deg/s]
+//    float gyro_z;       // [deg/s]
+//    float temperature;  // [¡æ]
+//    float accel2_x;      // [m/s/s]
+//    float accel2_y;      // [m/s/s]
+//    float accel2_z;      // [m/s/s]
+//    float gyro2_x;       // [deg/s]
+//    float gyro2_y;       // [deg/s]
+//    float gyro2_z;       // [deg/s]
+//    float temperature2;  // [¡æ]
+//    uint16_t counter;  // [unitless]
+//} IMU_330_IMU_SCALEDS;
+
+typedef struct {
+    float accel_x;      // [m/s/s]
+    float accel_y;      // [m/s/s]
+    float accel_z;      // [m/s/s]
+    float gyro_x;       // [deg/s]
+    float gyro_y;       // [deg/s]
+    float gyro_z;       // [deg/s]
+    float temperature;  // [¡æ]
 }IMU_330_IMU_CALIBRATEDS;
+
+//typedef struct {
+//    float accel_x;      // [m/s/s]
+//    float accel_y;      // [m/s/s]
+//    float accel_z;      // [m/s/s]
+//    float gyro_x;       // [deg/s]
+//    float gyro_y;       // [deg/s]
+//    float gyro_z;       // [deg/s]
+//    float temperature;  // [¡æ]
+//    float accel2_x;      // [m/s/s]
+//    float accel2_y;      // [m/s/s]
+//    float accel2_z;      // [m/s/s]
+//    float gyro2_x;       // [deg/s]
+//    float gyro2_y;       // [deg/s]
+//    float gyro2_z;       // [deg/s]
+//    float temperature2;  // [¡æ]
+//    uint16_t counter;  // [unitless]
+//}IMU_330_IMU_CALIBRATEDS;
 
 #pragma pack()
 

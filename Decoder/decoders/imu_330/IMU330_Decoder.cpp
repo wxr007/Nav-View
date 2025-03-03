@@ -40,11 +40,9 @@ void IMU330_Decoder::init()
     counter_F1 = 0;
     counter_F2 = 0;
     counter_F3 = 0;
-#ifdef REALTIME
     m_imu_rawcount_list.clear();
     m_imu_scaled_list.clear();
     m_imu_calibrated_list.clear();
-#endif
 }
 
 int IMU330_Decoder::input_raw(uint8_t c)
@@ -77,36 +75,31 @@ int IMU330_Decoder::input_raw(uint8_t c)
             //raw.crc16 = (raw.data[raw.length - 2] << 8) | raw.data[raw.length - 1];
 
             uint16_t crc = crc16_ccitt_false(&raw.msgid, raw.length + 2);
-#ifdef OUTPUT
-            FILE* f_debug = FileManager::Instance().get_file("debug.log", "");
-#endif
+            FILE* f_debug = FileManager::Instance().get_file("debug.log", "msgid,count,len,crc,raw_crc,tow,status\n");
             if (crc != raw.crc16) {
-#ifdef OUTPUT
-                if(f_debug) fprintf(f_debug, "error: msgid = %02X, crc = %4X, raw_crc = %4X\n", raw.msgid, crc, raw.crc16);
-#endif
+                if(f_debug) fprintf(f_debug, "%02X,0,%4d,%04X,%04X,0,error\n", raw.msgid, raw.length, crc, raw.crc16);
                 return -1;
             }
-            int msgid = decode_msg();
-#ifdef OUTPUT
+            int num = 0;
+            int msgid = decode_msg(num);
             if (msgid > 0) {
                 if (msgid == 0xA1) {
-                    if (f_debug) fprintf(f_debug, "%d: msgid = %02X, crc = %4X, raw_crc = %4X, tow = %d\n", counter_A1, raw.msgid, crc, raw.crc16, m_imu.tow);
+                    if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_A1, raw.length, crc, raw.crc16, m_imu.tow, num);
                 }else if (msgid == 0xF1) {          
-                    if (f_debug) fprintf(f_debug, "%d: msgid = %02X, crc = %4X, raw_crc = %4X\n", counter_F1, raw.msgid, crc, raw.crc16);
+                    if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_F1, raw.length, crc, raw.crc16, m_imu.tow, num);
                 }else if (msgid == 0xF2) {          
-                    if (f_debug) fprintf(f_debug, "%d: msgid = %02X, crc = %4X, raw_crc = %4X\n", counter_F2, raw.msgid, crc, raw.crc16);
+                    if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_F2, raw.length, crc, raw.crc16, m_imu.tow, num);
                 }else if (msgid == 0xF3) {          
-                    if (f_debug) fprintf(f_debug, "%d: msgid = %02X, crc = %4X, raw_crc = %4X\n", counter_F3, raw.msgid, crc, raw.crc16);
+                    if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_F3, raw.length, crc, raw.crc16, m_imu.tow, num);
                 }
             }
-#endif
             return msgid;
         }
     }
     return 0;
 }
 
-int IMU330_Decoder::decode_msg()
+int IMU330_Decoder::decode_msg(int& num)
 {
     switch (raw.msgid)
     {
@@ -125,20 +118,18 @@ int IMU330_Decoder::decode_msg()
     case 0xF1://IMU_RAWCOUNTS
     {
         uint32_t i = 0;
-#ifdef REALTIME
         m_imu_rawcount_list.clear();
-#endif
+        size_t size = sizeof(IMU_330_IMU_RAWCOUNTS);
         while (raw.length >= sizeof(IMU_330_IMU_RAWCOUNTS)*(i+1)) {
             memcpy(&m_imu_rawcount, raw.data + (i* sizeof(IMU_330_IMU_RAWCOUNTS)), sizeof(IMU_330_IMU_RAWCOUNTS));
-#ifdef OUTPUT
-            print_IMU_330_IMU_RAWCOUNTS();
-#endif
-#ifdef REALTIME
             m_imu_rawcount_list.push_back(m_imu_rawcount);
-#endif
             i++;
             counter_F1++;
-        }    
+        }
+#ifdef OUTPUT
+        print_IMU_330_IMU_RAWCOUNTS();
+#endif
+        num = i;
         //if (raw.length != sizeof(IMU_330_IMU_RAWCOUNTS)) {
         //    return -1;
         //}
@@ -150,20 +141,18 @@ int IMU330_Decoder::decode_msg()
     case 0xF2://IMU_SCALEDS
     {
         uint32_t i = 0;
-#ifdef REALTIME
         m_imu_scaled_list.clear();
-#endif
+        size_t size = sizeof(IMU_330_IMU_SCALEDS);
         while (raw.length >= sizeof(IMU_330_IMU_SCALEDS) * (i + 1)) {
             memcpy(&m_imu_scaled, raw.data + (i * sizeof(IMU_330_IMU_SCALEDS)), sizeof(IMU_330_IMU_SCALEDS));
-#ifdef OUTPUT
-            print_IMU_330_IMU_SCALEDS();
-#endif
-#ifdef REALTIME
             m_imu_scaled_list.push_back(m_imu_scaled);
-#endif
             i++;
             counter_F2++;
         }
+#ifdef OUTPUT
+        print_IMU_330_IMU_SCALEDS();
+#endif
+        num = i;
         //if (raw.length != sizeof(IMU_330_IMU_SCALEDS)) {
         //    return -1;
         //}
@@ -175,20 +164,18 @@ int IMU330_Decoder::decode_msg()
     case 0xF3://IMU_CALIBRATEDS 
     {
         uint32_t i = 0;
-#ifdef REALTIME
         m_imu_calibrated_list.clear();
-#endif
+        size_t size = sizeof(IMU_330_IMU_CALIBRATEDS);
         while (raw.length >= sizeof(IMU_330_IMU_CALIBRATEDS) * (i + 1)) {
             memcpy(&m_imu_calibrated, raw.data + (i * sizeof(IMU_330_IMU_CALIBRATEDS)), sizeof(IMU_330_IMU_CALIBRATEDS));
-#ifdef OUTPUT
-            print_IMU_330_IMU_CALIBRATEDS();
-#endif
-#ifdef REALTIME
             m_imu_calibrated_list.push_back(m_imu_calibrated);
-#endif
             i++;
             counter_F3++;
         }
+#ifdef OUTPUT
+        print_IMU_330_IMU_CALIBRATEDS();
+#endif
+        num = i;
         //if (raw.length != sizeof(IMU_330_IMU_CALIBRATEDS)) {
         //    return -1;
         //}
@@ -218,7 +205,6 @@ IMU_330_IMU_CALIBRATEDS* IMU330_Decoder::get_imu_calibrated()
 {
     return &m_imu_calibrated;
 }
-#ifdef REALTIME
 vector<IMU_330_IMU_RAWCOUNTS>& IMU330_Decoder::get_imu_rawcount_list()
 {
     return m_imu_rawcount_list;
@@ -231,7 +217,6 @@ vector<IMU_330_IMU_CALIBRATEDS>& IMU330_Decoder::get_imu_calibrated_list()
 {
     return m_imu_calibrated_list;
 }
-#endif
 //加计放在陀螺前面
 void IMU330_Decoder::print_IMU_330_IMU1()
 {
@@ -242,47 +227,80 @@ void IMU330_Decoder::print_IMU_330_IMU1()
 
 void IMU330_Decoder::print_IMU_330_IMU_RAWCOUNTS()
 {
-    FILE* f_imu = FileManager::Instance().get_file("imu_rawcounts.csv",
-        "accel_x1,accel_y1,accel_z1,gyro_x1,gyro_y1,gyro_z1,temperature1, \
-        accel_x2,accel_y2,accel_z2,gyro_x2,gyro_y2,gyro_z2,temperature2,counter\r\n");
+    FILE* f_imu = NULL;
+    if (!FileManager::Instance().has_file("imu_rawcounts.csv")) {
+        char title[1024] = { 0 };
+        int pos = 0;
+        for (int i = 0; i < m_imu_rawcount_list.size(); i++) {
+            pos += sprintf(title + pos, "accel_x%d,accel_y%d,accel_z%d,gyro_x%d,gyro_y%d,gyro_z%d,temperature%d,", i + 1, i + 1, i + 1, i + 1, i + 1, i + 1, i + 1);
+        }
+        sprintf(title + pos, "counter\r\n");
+        f_imu = FileManager::Instance().get_file("imu_rawcounts.csv", title);
+    }
+    else {
+        f_imu = FileManager::Instance().get_file("imu_rawcounts.csv", "");
+    }
 
-    //打印raw.data中的所有字节
-    //for (int i = 0; i < raw.length; i++) {
-    //    fprintf(f_imu, "%02X ", raw.data[i]);
-    //    if (i % 4 == 3) {
-    //        fprintf(f_imu, ",");
-    //    }
-    //}
-    //fprintf(f_imu, "\r\n");
-
-    fprintf(f_imu, "%10d,%10d,%10d,%10d,%10d,%10d,%10d,%10d,%10d,%10d,%10d,%10d,%10d,%10d,%10d\r\n",
-        m_imu_rawcount.accel_x, m_imu_rawcount.accel_y, m_imu_rawcount.accel_z, m_imu_rawcount.gyro_x, m_imu_rawcount.gyro_y, m_imu_rawcount.gyro_z, m_imu_rawcount.temperature,
-        m_imu_rawcount.accel2_x, m_imu_rawcount.accel2_y, m_imu_rawcount.accel2_z, m_imu_rawcount.gyro2_x, m_imu_rawcount.gyro2_y, m_imu_rawcount.gyro2_z, m_imu_rawcount.temperature2,
-        m_imu_rawcount.counter);
+    for (int i = 0; i < m_imu_rawcount_list.size(); i++) {
+        fprintf(f_imu, "%10d,%10d,%10d,%10d,%10d,%10d,%10d,", 
+            m_imu_rawcount_list[i].accel_x, m_imu_rawcount_list[i].accel_y, m_imu_rawcount_list[i].accel_z, 
+            m_imu_rawcount_list[i].gyro_x, m_imu_rawcount_list[i].gyro_y, m_imu_rawcount_list[i].gyro_z, m_imu_rawcount_list[i].temperature);
+    }
+    uint16_t counter = 0;
+    memcpy(&counter, raw.data + raw.length - 2, sizeof(uint16_t));
+    fprintf(f_imu,"%10d\r\n", counter);
 }
 
 void IMU330_Decoder::print_IMU_330_IMU_SCALEDS()
 {
-    FILE* f_imu = FileManager::Instance().get_file("imu_scaleds.csv",
-        "accel_x1,accel_y1,accel_z1,gyro_x1,gyro_y1,gyro_z1,temperature1, \
-        accel_x2,accel_y2,accel_z2,gyro_x2,gyro_y2,gyro_z2,temperature2,counter\r\n");
+    FILE* f_imu = NULL;
+    if (!FileManager::Instance().has_file("imu_scaleds.csv")) {
+        char title[1024] = { 0 };
+        int pos = 0;
+        for (int i = 0; i < m_imu_scaled_list.size(); i++) {
+            pos += sprintf(title + pos, "accel_x%d,accel_y%d,accel_z%d,gyro_x%d,gyro_y%d,gyro_z%d,temperature%d,", i + 1, i + 1, i + 1, i + 1, i + 1, i + 1, i + 1);
+        }
+        sprintf(title + pos, "counter\r\n");
+        f_imu = FileManager::Instance().get_file("imu_scaleds.csv", title);
+    }
+    else {
+        f_imu = FileManager::Instance().get_file("imu_scaleds.csv", "");
+    }
 
-    fprintf(f_imu, "%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%6.2f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%6.2f,%d\r\n",
-        m_imu_scaled.accel_x, m_imu_scaled.accel_y, m_imu_scaled.accel_z, m_imu_scaled.gyro_x, m_imu_scaled.gyro_y, m_imu_scaled.gyro_z, m_imu_scaled.temperature,
-        m_imu_scaled.accel2_x, m_imu_scaled.accel2_y, m_imu_scaled.accel2_z, m_imu_scaled.gyro2_x, m_imu_scaled.gyro2_y, m_imu_scaled.gyro2_z, m_imu_scaled.temperature2,
-        m_imu_scaled.counter);
+    for (int i = 0; i < m_imu_scaled_list.size(); i++) {
+        fprintf(f_imu, "%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%6.2f,", 
+            m_imu_scaled_list[i].accel_x, m_imu_scaled_list[i].accel_y, m_imu_scaled_list[i].accel_z, 
+            m_imu_scaled_list[i].gyro_x, m_imu_scaled_list[i].gyro_y, m_imu_scaled_list[i].gyro_z, m_imu_scaled_list[i].temperature);
+    }
+    uint16_t counter = 0;
+    memcpy(&counter, raw.data + raw.length - 2, sizeof(uint16_t));
+    fprintf(f_imu, "%10d\r\n", counter);
 }
 
 void IMU330_Decoder::print_IMU_330_IMU_CALIBRATEDS()
 {
-    FILE* f_imu = FileManager::Instance().get_file("imu_calibrates.csv",
-        "accel_x1,accel_y1,accel_z1,gyro_x1,gyro_y1,gyro_z1,temperature1, \
-        accel_x2,accel_y2,accel_z2,gyro_x2,gyro_y2,gyro_z2,temperature2,counter\r\n");
+    FILE* f_imu = NULL;
+    if (!FileManager::Instance().has_file("imu_calibrates.csv")) {
+        char title[1024] = { 0 };
+        int pos = 0;
+        for (int i = 0; i < m_imu_calibrated_list.size(); i++) {
+            pos += sprintf(title + pos, "accel_x%d,accel_y%d,accel_z%d,gyro_x%d,gyro_y%d,gyro_z%d,temperature%d,", i + 1, i + 1, i + 1, i + 1, i + 1, i + 1, i + 1);
+        }
+        sprintf(title + pos, "counter\r\n");
+        f_imu = FileManager::Instance().get_file("imu_calibrates.csv", title);
+    }
+    else {
+        f_imu = FileManager::Instance().get_file("imu_calibrates.csv", "");
+    }
 
-    fprintf(f_imu, "%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%6.2f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%6.2f,%d\r\n",
-        m_imu_calibrated.accel_x, m_imu_calibrated.accel_y, m_imu_calibrated.accel_z, m_imu_calibrated.gyro_x, m_imu_calibrated.gyro_y, m_imu_calibrated.gyro_z, m_imu_calibrated.temperature,
-        m_imu_calibrated.accel2_x, m_imu_calibrated.accel2_y, m_imu_calibrated.accel2_z, m_imu_calibrated.gyro2_x, m_imu_calibrated.gyro2_y, m_imu_calibrated.gyro2_z, m_imu_calibrated.temperature2,
-        m_imu_calibrated.counter);
+    for (int i = 0; i < m_imu_calibrated_list.size(); i++) {
+        fprintf(f_imu, "%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%6.2f,",
+            m_imu_calibrated_list[i].accel_x, m_imu_calibrated_list[i].accel_y, m_imu_calibrated_list[i].accel_z,
+            m_imu_calibrated_list[i].gyro_x, m_imu_calibrated_list[i].gyro_y, m_imu_calibrated_list[i].gyro_z, m_imu_calibrated_list[i].temperature);
+    }
+    uint16_t counter = 0;
+    memcpy(&counter, raw.data + raw.length - 2, sizeof(uint16_t));
+    fprintf(f_imu, "%10d\r\n", counter);
 }
 
 

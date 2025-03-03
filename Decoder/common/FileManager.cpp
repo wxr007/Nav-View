@@ -77,3 +77,9 @@ FILE* FileManager::get_file(std::string suffix, std::string title)
 	f_ptr = output_file_map[suffix];
 	return f_ptr;
 }
+
+bool FileManager::has_file(std::string suffix)
+{
+	FilesMap::iterator it = output_file_map.find(suffix);
+	return (it != output_file_map.end());
+}
