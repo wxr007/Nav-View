@@ -20,5 +20,5 @@ private:
 	IMU330_Decoder* m_IMU330_Decoder;
 signals:
 	void sgnUpdate(int type);
-	void sgnUpdateValues(int type,QString value);
+	void sgnUpdateValues(int type, QByteArray value);
 };

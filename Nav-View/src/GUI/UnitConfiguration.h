@@ -12,7 +12,7 @@ public:
 	~UnitConfiguration();
 
 public slots:
-	void onUpdateValues(int type, QString value);
+	void onUpdateValues(int type, QByteArray value);
     void on_GetAllValues_clicked();	
 	void on_SetAllValues_clicked();
 private:
