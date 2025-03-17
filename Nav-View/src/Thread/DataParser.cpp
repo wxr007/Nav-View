@@ -55,7 +55,7 @@ void DataParser::processIMU330(QByteArray array)
 		}
 		else if(ret != 0){
 			//TODO: get value from decoder
-			emit sgnUpdateValues(ret,"values");
+			emit sgnUpdateValues(ret,array);
 		}
 	}
 }

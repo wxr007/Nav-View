@@ -77,7 +77,7 @@ FieldSettings::FieldSettings(QWidget* parent)
     footLayout->addWidget(rxLabel);
     footLayout->addWidget(rxTextEdit);
 
-    connect(ThreadManager::Instance().m_DataParser, SIGNAL(sgnUpdateValues(int, QString)), this, SLOT(onUpdateValues(int, QString)), Qt::QueuedConnection);
+    connect(ThreadManager::Instance().m_DataParser, SIGNAL(sgnUpdateValues(int, QByteArray)), this, SLOT(onUpdateValues(int, QByteArray)), Qt::QueuedConnection);
     // 连接按钮的点击信号到对应的槽函数
     connect(getFieldButton, &QPushButton::clicked, this, &FieldSettings::on_getFieldButton_clicked);
     connect(setFieldButton, &QPushButton::clicked, this, &FieldSettings::on_setFieldButton_clicked);
@@ -101,8 +101,16 @@ FieldSettings::~FieldSettings()
     delete gridLayout;
 }
 
-void FieldSettings::onUpdateValues(int type, QString value)
-{
+void FieldSettings::onUpdateValues(int type, QByteArray value)
+{// 这里实现更新字段的逻辑，示例中只是简单打印
+	qDebug() << "Update value:" << value << " for type " << type;
+	// 你可能需要根据 type 更新对应的字段值
+	//for (int i = 0; i < MAX_FIELDS; ++i) {
+	//	// 示例：简单设置一个值
+	//	if (useCheckboxes[i]->isChecked()) {
+	//		fieldEdits[i]->setText(value);
+	//	}
+	//}
 }
 
 void FieldSettings::on_getFieldButton_clicked()

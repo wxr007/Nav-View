@@ -20,7 +20,7 @@ public:
     ~FieldSettings();
 
 private slots:
-    void onUpdateValues(int type, QString value);
+    void onUpdateValues(int type, QByteArray value);
     void on_getFieldButton_clicked();
     void on_setFieldButton_clicked();
     void on_checkbox_state_changed(int state, int row);
