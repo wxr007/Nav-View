@@ -29,7 +29,7 @@ typedef struct {
     uint16_t crc16;
 } IMU_330_MSG;
 
-typedef struct {
+typedef struct {//0xA1 
     uint16_t     week;
     uint32_t     tow;      // [ms]
     float        accel_x;  // [m/s/s]
@@ -42,6 +42,40 @@ typedef struct {
     uint16_t     status;
     uint16_t     counter;  // [unitless]
 } IMU_330_IMU1;
+
+typedef struct {// 0xA2  (CALIBRATEDS)
+    uint16_t     week;
+    uint32_t     tow;      // [ms]
+    float        accel_x;  // [m/s/s]
+    float        accel_y;  // [m/s/s]
+    float        accel_z;  // [m/s/s]
+    float        gyro_x;   // [deg/s]
+    float        gyro_y;   // [deg/s]
+    float        gyro_z;   // [deg/s]
+    float        temp;     // [℃]
+    uint16_t     status;
+    uint16_t     counter;  // [unitless]
+} IMU_330_IMU2;
+
+typedef struct {//0xC1   (现在用SCALEDS,等校准完用CALIBRATEDS)
+    uint16_t     week;
+    uint32_t     tow;      // [ms]
+    float        roll;     // [deg]
+    float        pitch;    // [deg]
+    float        yaw;      // [deg]
+    float        gyro_bias_x; // [deg/s]
+    float        gyro_bias_y; // [deg/s]
+    float        gyro_bias_z; // [deg/s]
+    float        accel_x;  // [m/s/s]
+    float        accel_y;  // [m/s/s]
+    float        accel_z;  // [m/s/s]
+    float        gyro_x;   // [deg/s]
+    float        gyro_y;   // [deg/s]
+    float        gyro_z;   // [deg/s]
+    float        temp;     // [℃]
+    uint16_t     status;
+    uint16_t     counter;  // [unitless]
+} IMU_330_AHRS1;
 
 typedef struct {
     int32_t accel_x;

@@ -53,7 +53,7 @@ void DataParser::processIMU330(QByteArray array)
             DataCache::Instance().addIMUCALIBRATED(list);
 			emit sgnUpdate(ret);
 		}
-		else {
+		else if(ret != 0){
 			//TODO: get value from decoder
 			emit sgnUpdateValues(ret,"values");
 		}

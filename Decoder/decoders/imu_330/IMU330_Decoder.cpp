@@ -33,10 +33,14 @@ void IMU330_Decoder::init()
 {
     memset(&raw, 0, sizeof(raw));
     memset(&m_imu, 0, sizeof(m_imu));
+    memset(&m_imu2, 0, sizeof(m_imu2));
+    memset(&m_ahrs1, 0, sizeof(m_ahrs1));
     memset(&m_imu_rawcount, 0, sizeof(m_imu_rawcount));
     memset(&m_imu_scaled, 0, sizeof(m_imu_scaled));
     memset(&m_imu_calibrated, 0, sizeof(m_imu_calibrated));
     counter_A1 = 0;
+    counter_A2 = 0;
+    counter_C1 = 0;
     counter_F1 = 0;
     counter_F2 = 0;
     counter_F3 = 0;
@@ -85,7 +89,11 @@ int IMU330_Decoder::input_raw(uint8_t c)
             if (msgid > 0) {
                 if (msgid == 0xA1) {
                     if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_A1, raw.length, crc, raw.crc16, m_imu.tow, num);
-                }else if (msgid == 0xF1) {          
+                }else if (msgid == 0xA2) {
+                    if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_A2, raw.length, crc, raw.crc16, m_imu.tow, num);
+                }else if (msgid == 0xC1) {
+                    if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_C1, raw.length, crc, raw.crc16, m_imu.tow, num);
+                }else if (msgid == 0xF1) {
                     if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_F1, raw.length, crc, raw.crc16, m_imu.tow, num);
                 }else if (msgid == 0xF2) {          
                     if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_F2, raw.length, crc, raw.crc16, m_imu.tow, num);
@@ -113,6 +121,30 @@ int IMU330_Decoder::decode_msg(int& num)
         print_IMU_330_IMU1();
 #endif
         counter_A1++;
+    }
+    break;
+    case 0xA2:
+    {
+        if (raw.length != sizeof(IMU_330_IMU2)) {
+            return -1;
+        }
+        memcpy(&m_imu2, raw.data, sizeof(IMU_330_IMU2));
+#ifdef OUTPUT
+        print_IMU_330_IMU2();
+#endif
+        counter_A2++;
+    }
+    break;
+    case 0xC1: 
+    {
+        if (raw.length != sizeof(IMU_330_AHRS1)) {
+            return -1;
+        }
+        memcpy(&m_ahrs1, raw.data, sizeof(IMU_330_AHRS1));
+#ifdef OUTPUT
+        print_IMU_330_AHRS1();
+#endif
+        counter_C1++;
     }
     break;
     case 0xF1://IMU_RAWCOUNTS
@@ -222,7 +254,33 @@ void IMU330_Decoder::print_IMU_330_IMU1()
 {
     FILE* f_imu = FileManager::Instance().get_file("imu.csv", "week,tow,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temperature,counter\r\n");
     fprintf(f_imu, "%4i,%11.4f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%6.2f,%d\r\n",
-        m_imu.week,(double)m_imu.tow/1000.0, m_imu.accel_x, m_imu.accel_y, m_imu.accel_z, m_imu.gyro_x, m_imu.gyro_y, m_imu.gyro_z, m_imu.temp, m_imu.counter);
+        m_imu.week,(double)m_imu.tow/1000.0, m_imu.accel_x, m_imu.accel_y, m_imu.accel_z, 
+        m_imu.gyro_x, m_imu.gyro_y, m_imu.gyro_z, m_imu.temp, m_imu.counter);
+}
+
+void IMU330_Decoder::print_IMU_330_IMU2()
+{
+    FILE* f_imu = FileManager::Instance().get_file("imu2.csv", "week,tow,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temperature,counter\r\n");
+    fprintf(f_imu, "%4i,%11.4f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%9.5f,%6.2f,%d\r\n",
+        m_imu2.week, (double)m_imu2.tow / 1000.0, m_imu2.accel_x, m_imu2.accel_y, m_imu2.accel_z, 
+        m_imu2.gyro_x, m_imu2.gyro_y, m_imu2.gyro_z, m_imu2.temp, m_imu2.counter);
+}
+
+void IMU330_Decoder::print_IMU_330_AHRS1()
+{
+    FILE* f_imu = FileManager::Instance().get_file("ahrs1.csv", "week,tow,roll,pitch,yaw,gyro_bias_x,gyro_bias_y,gyro_bias_z,accel_x,accel_y,accel_z,gyro_x,gyro_y,gyro_z,temperature,counter\r\n");
+
+    fprintf(f_imu, "%4i,%11.4f,\
+        %9.5f,%9.5f,%9.5f,\
+        %9.5f,%9.5f,%9.5f,\
+        %9.5f,%9.5f,%9.5f,\
+        %9.5f,%9.5f,%9.5f,%6.2f,%d\r\n",
+        m_ahrs1.week, (double)m_ahrs1.tow / 1000.0,
+        m_ahrs1.roll, m_ahrs1.pitch, m_ahrs1.yaw,
+        m_ahrs1.gyro_bias_x, m_ahrs1.gyro_bias_y, m_ahrs1.gyro_bias_z,
+        m_ahrs1.accel_x, m_ahrs1.accel_y, m_ahrs1.accel_z,
+        m_ahrs1.gyro_x, m_ahrs1.gyro_y, m_ahrs1.gyro_z,
+        m_ahrs1.temp, m_ahrs1.counter);
 }
 
 void IMU330_Decoder::print_IMU_330_IMU_RAWCOUNTS()
