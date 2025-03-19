@@ -11,6 +11,8 @@ DataCache& DataCache::Instance() {
 }
 DataCache::DataCache()
 {
+    m_auto_connect = false;
+    m_ret0x01 = false;
     memset(&m_imu, 0, sizeof(m_imu));
     init();
 }

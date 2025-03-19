@@ -128,6 +128,8 @@
     <ClCompile Include="src\Manager\ThreadManager.cpp" />
     <ClCompile Include="src\Thread\Base\WorkerBase.cpp" />
     <ClCompile Include="src\Thread\DataParser.cpp" />
+    <ClCompile Include="src\Thread\DetectionThread.cpp" />
+    <ClCompile Include="src\Thread\IMU330Worker.cpp" />
     <ClCompile Include="src\Thread\SerialThread.cpp" />
     <ClCompile Include="src\WinMain\main.cpp" />
     <ClCompile Include="src\WinMain\NavView.cpp" />
@@ -147,6 +149,8 @@
     <QtMoc Include="src\Manager\ConfigFile.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="src\Thread\IMU330Worker.h" />
+    <QtMoc Include="src\Thread\DetectionThread.h" />
     <QtMoc Include="src\WinMain\NavView.h" />
     <QtMoc Include="..\3rd\qcustomplot\qcustomplot.h" />
     <QtMoc Include="src\GUI\LogFilePath.h" />

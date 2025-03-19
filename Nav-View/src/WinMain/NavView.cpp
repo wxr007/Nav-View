@@ -1,6 +1,7 @@
 #include "NavView.h"
 #include <QMdiSubWindow>
 #include <LogManager.h>
+#include "ThreadManager.h"
 
 NavView::NavView(QWidget *parent)
     : QMainWindow(parent)
@@ -43,6 +44,10 @@ NavView::NavView(QWidget *parent)
     initWinPos();
     //×î´ó»¯
     showMaximized();
+
+    connect(ThreadManager::Instance().m_DetectionThread, &DetectionThread::sgnShowStatus,this, &NavView::on_statusBar_messageChanged);
+    ThreadManager::Instance().m_DetectionThread->start();
+    //connect(serialportWidget, &SerialportWidget::sgnShowMessage, this, &NavView::on_statusBar_messageChanged);
 }
 
 NavView::~NavView()
@@ -87,5 +92,10 @@ void NavView::on_actionRecord_triggered()
     if (LogManager::getInstance()->getLogPath().isEmpty()) {
         logFileSubWindow->show();
     }
+}
+
+void NavView::on_statusBar_messageChanged(const QString message)
+{
+    ui.statusBar->showMessage(message, 0);
 }
 

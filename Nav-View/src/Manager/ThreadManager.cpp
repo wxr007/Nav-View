@@ -12,8 +12,10 @@ ThreadManager& ThreadManager::Instance() {
 ThreadManager::ThreadManager()
     : QObject(NULL)
 {
+    m_DetectionThread = new DetectionThread(NULL);
     m_DataParser = new DataParser(NULL);
-    m_SerialThread = new SerialThread(NULL, m_DataParser);
+    m_IMU330Worker = new IMU330Worker(NULL, m_DataParser);
+    m_SerialThread = new SerialThread(NULL, m_IMU330Worker);
 }
 ThreadManager::~ThreadManager()
 {

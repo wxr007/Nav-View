@@ -24,6 +24,7 @@ public slots:
     void on_actionGraph_triggered();
     void on_actionFieldSettings_triggered();
     void on_actionRecord_triggered();
+    void on_statusBar_messageChanged(const QString message);
 private:
     Ui::NavViewClass ui;
     SerialportWidget *serialportWidget;

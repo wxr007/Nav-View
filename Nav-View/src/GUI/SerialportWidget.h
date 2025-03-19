@@ -21,7 +21,9 @@ public slots:
 	void onStartClicked();
 	void onEnable(bool enable);
 	void onOpenFailed();
-	void onOtherStreamEnable(bool enable);
+	void onAutoConnect(bool autoState);
 private:
 	Ui::SerialportWidgetClass ui;
+signals:
+	void sgnShowMessage(const QString msg);
 };

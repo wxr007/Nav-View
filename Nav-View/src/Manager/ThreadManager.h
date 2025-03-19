@@ -1,8 +1,10 @@
 #pragma once
 
 #include <mutex>
+#include "DetectionThread.h"
 #include "SerialThread.h"
 #include "DataParser.h"
+#include "IMU330Worker.h"
 #include <QObject>
 #include <QMutex>
 #include <QWaitCondition>
@@ -27,7 +29,9 @@ private:
     static std::unique_ptr<ThreadManager> instance;
 public:
     DataParser* m_DataParser;
+    IMU330Worker* m_IMU330Worker;
     SerialThread* m_SerialThread;
+    DetectionThread* m_DetectionThread;
 
     QMutex m_ReadFileMutex;
     QWaitCondition m_ReadFileCondition;

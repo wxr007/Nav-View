@@ -113,6 +113,12 @@
     <ClCompile Include="..\Decoder\decoders\imu_330\IMU330_Decoder.cpp">
       <Filter>Decoder\Decode</Filter>
     </ClCompile>
+    <ClCompile Include="src\Thread\DetectionThread.cpp">
+      <Filter>Src\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Thread\IMU330Worker.cpp">
+      <Filter>Src\Thread</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="src\GUI\SerialportWidget.ui">
@@ -182,6 +188,12 @@
     </QtMoc>
     <QtMoc Include="src\WinMain\NavView.h">
       <Filter>Src\WinMain</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Thread\DetectionThread.h">
+      <Filter>Src\Thread</Filter>
+    </QtMoc>
+    <QtMoc Include="src\Thread\IMU330Worker.h">
+      <Filter>Src\Thread</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

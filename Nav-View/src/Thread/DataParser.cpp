@@ -1,5 +1,6 @@
 #include "DataParser.h"
 #include "DataCache.h"
+#include "ThreadManager.h"
 
 DataParser::DataParser(QObject *parent)
 	: QObject(parent)
@@ -52,6 +53,12 @@ void DataParser::processIMU330(QByteArray array)
 			vector<IMU_330_IMU_CALIBRATEDS>& list = m_IMU330_Decoder->get_imu_calibrated_list();
             DataCache::Instance().addIMUCALIBRATED(list);
 			emit sgnUpdate(ret);
+		}
+		else if (ret == 0x01) {
+			ThreadManager::Instance().m_DetectionThread->m_Mutex.lock();
+			DataCache::Instance().m_ret0x01 = true;
+			ThreadManager::Instance().m_DetectionThread->m_WaitCondition.notify_all();
+            ThreadManager::Instance().m_DetectionThread->m_Mutex.unlock();
 		}
 		else if(ret != 0){
 			//TODO: get value from decoder

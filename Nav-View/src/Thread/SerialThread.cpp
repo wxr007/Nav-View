@@ -97,8 +97,8 @@ void SerialWorker::onReadReady()
 	emit sgnDataSize(buffer.size());
 }
 
-SerialThread::SerialThread(QObject* parent, DataParser* dataparser)
-	:WorkerThread(parent, new SerialWorker(NULL, dataparser))
+SerialThread::SerialThread(QObject* parent, SerialWorker* worker)
+	:WorkerThread(parent, worker)
 {
 	connect(m_Worker, SIGNAL(sgnDataSize(const int)), this, SIGNAL(sgnDataSize(const int)));
 }
@@ -115,5 +115,10 @@ void SerialThread::setSerialPortParams(QString sName, int nBaudRate, int nDataBi
 void SerialThread::setDataFormat(int index)
 {
 	((SerialWorker*)m_Worker)->setDataFormat(index);
+}
+
+void SerialThread::onWrite(const QByteArray data)
+{
+	m_Worker->onWrite(data);
 }
 

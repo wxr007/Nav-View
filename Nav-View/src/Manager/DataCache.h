@@ -32,4 +32,6 @@ public:
     vector<IMU_330_IMU_RAWCOUNTS> m_imu_rawcount_list;
     vector<IMU_330_IMU_SCALEDS> m_imu_scaled_list;
     vector<IMU_330_IMU_CALIBRATEDS> m_imu_calibrated_list;
+    bool m_auto_connect;
+    bool m_ret0x01;
 };

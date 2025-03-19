@@ -7,10 +7,10 @@
 #define Connect_TXT u8"Connect"
 #define Disconnect_TXT u8"Disconnect"
 
-SerialportWidget::SerialportWidget(QWidget *parent)
-	: QWidget(parent)
+SerialportWidget::SerialportWidget(QWidget* parent)
+    : QWidget(parent)
 {
-	ui.setupUi(this);
+    ui.setupUi(this);
     //引入图形字体
     int fontId = QFontDatabase::addApplicationFont(":/res/fontawesome-webfont.ttf");
     QString fontName = QFontDatabase::applicationFontFamilies(fontId).at(0);
@@ -24,8 +24,10 @@ SerialportWidget::SerialportWidget(QWidget *parent)
 
     connect(ThreadManager::Instance().m_SerialThread, SIGNAL(sgnEnable(bool)), this, SLOT(onEnable(bool)), Qt::QueuedConnection);
     connect(ThreadManager::Instance().m_SerialThread, SIGNAL(sgnOpenFailed()), this, SLOT(onOpenFailed()), Qt::QueuedConnection);
-}
+    connect(ui.auto_box, SIGNAL(toggled(bool)), this, SLOT(onAutoConnect(bool)));
 
+    DataCache::Instance().m_auto_connect = ui.auto_box->isChecked();
+}
 SerialportWidget::~SerialportWidget()
 {}
 
@@ -99,12 +101,20 @@ void SerialportWidget::onOpenFailed()
     QMessageBox::warning(this, u8"警告", u8"串口打开失败!");
 }
 
-void SerialportWidget::onOtherStreamEnable(bool enable)
+void SerialportWidget::onAutoConnect(bool autoState)
 {
-    if (enable) {
-        ui.start_btn->setEnabled(false);
+    if (autoState) {
+        ui.start_btn->setEnabled(false);  
+        ui.refresh_btn->setEnabled(false);
+        ui.port_box->setEnabled(false);
+        ui.baud_box->setEnabled(false);
     }
     else {
         ui.start_btn->setEnabled(true);
+        ui.refresh_btn->setEnabled(true);
+        ui.port_box->setEnabled(true);
+        ui.baud_box->setEnabled(true);
     }
+    DataCache::Instance().m_auto_connect = autoState;
+    emit sgnShowMessage(autoState ? u8"自动连接已开启" : u8"自动连接已关闭");
 }
