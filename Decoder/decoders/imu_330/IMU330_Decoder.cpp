@@ -99,6 +99,9 @@ int IMU330_Decoder::input_raw(uint8_t c)
                     if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_F2, raw.length, crc, raw.crc16, m_imu.tow, num);
                 }else if (msgid == 0xF3) {          
                     if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_F3, raw.length, crc, raw.crc16, m_imu.tow, num);
+				}
+                else if (msgid == 0x11) {
+                    if (f_debug) fprintf(f_debug, "%02X,%8d,%4d,%04X,%04X,%d,%d\n", raw.msgid, counter_11, raw.length, crc, raw.crc16, m_imu.tow, num);
                 }
             }
             return msgid;
@@ -111,6 +114,20 @@ int IMU330_Decoder::decode_msg(int& num)
 {
     switch (raw.msgid)
     {
+    case 0x11://IMU1
+    {
+        uint32_t i = 0;
+        m_imu_get_value_list.clear();
+        size_t size = sizeof(IMU_330_GET_VALUE);
+        while (raw.length >= sizeof(IMU_330_GET_VALUE) * (i + 1)) {
+            memcpy(&m_imu_get_value, raw.data + (i * sizeof(IMU_330_GET_VALUE)), sizeof(IMU_330_GET_VALUE));
+            
+            i++;
+            counter_11++;
+        }
+        num = i;
+    }
+    break;
     case 0xA1://IMU1
     {
         if (raw.length != sizeof(IMU_330_IMU1)) {
@@ -237,6 +254,10 @@ IMU_330_IMU_CALIBRATEDS* IMU330_Decoder::get_imu_calibrated()
 {
     return &m_imu_calibrated;
 }
+IMU_330_GET_VALUE* IMU330_Decoder::get_imu_get_value()
+{
+	return &m_imu_get_value;
+}
 vector<IMU_330_IMU_RAWCOUNTS>& IMU330_Decoder::get_imu_rawcount_list()
 {
     return m_imu_rawcount_list;
@@ -248,6 +269,10 @@ vector<IMU_330_IMU_SCALEDS>& IMU330_Decoder::get_imu_scaled_list()
 vector<IMU_330_IMU_CALIBRATEDS>& IMU330_Decoder::get_imu_calibrated_list()
 {
     return m_imu_calibrated_list;
+}
+vector< IMU_330_GET_VALUE>& IMU330_Decoder::get_imu_get_value_list()
+{
+	return m_imu_get_value_list;
 }
 //加计放在陀螺前面
 void IMU330_Decoder::print_IMU_330_IMU1()

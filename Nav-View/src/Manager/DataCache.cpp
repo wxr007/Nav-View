@@ -42,3 +42,27 @@ void DataCache::addIMUCALIBRATED(vector<IMU_330_IMU_CALIBRATEDS>& list)
 {
     m_imu_calibrated_list.swap(list);
 }
+
+void DataCache::addIMUGetValues(IMU_330_GET_VALUE* pimu)
+{
+    memcpy(&m_imu_get_value, pimu, sizeof(IMU_330_IMU1));
+}
+
+void DataCache::addIMUGetValues_A1(IMU_330_GET_VALUE *pimu)
+{
+    memcpy(&m_imu_get_value_a1, pimu, sizeof(IMU_330_IMU1));
+}
+
+void DataCache::addIMUGetValues_F1(IMU_330_GET_VALUE* pimu)
+{
+    memcpy(&m_imu_get_value_f1, pimu, sizeof(IMU_330_IMU1));
+}
+
+void DataCache::addIMUGetValues_F2(IMU_330_GET_VALUE* pimu)
+{
+    memcpy(&m_imu_get_value_f2, pimu, sizeof(IMU_330_IMU1));
+}
+void DataCache::addIMUGetValues_F3(IMU_330_GET_VALUE* pimu)
+{
+    memcpy(&m_imu_get_value_f3, pimu, sizeof(IMU_330_IMU1));
+}

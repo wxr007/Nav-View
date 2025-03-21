@@ -15,9 +15,11 @@ public:
     IMU_330_IMU_RAWCOUNTS* get_imu_rawcount();
     IMU_330_IMU_SCALEDS* get_imu_scaled();
     IMU_330_IMU_CALIBRATEDS* get_imu_calibrated();
+	IMU_330_GET_VALUE* get_imu_get_value();
 	vector<IMU_330_IMU_RAWCOUNTS>& get_imu_rawcount_list();
     vector<IMU_330_IMU_SCALEDS>& get_imu_scaled_list();
     vector<IMU_330_IMU_CALIBRATEDS>& get_imu_calibrated_list();
+	vector<IMU_330_GET_VALUE>& get_imu_get_value_list();
 protected:
 	void print_IMU_330_IMU1();
 	void print_IMU_330_IMU2();
@@ -33,14 +35,17 @@ private:
 	IMU_330_IMU_RAWCOUNTS m_imu_rawcount;
 	IMU_330_IMU_SCALEDS m_imu_scaled;
 	IMU_330_IMU_CALIBRATEDS m_imu_calibrated;
+	IMU_330_GET_VALUE m_imu_get_value;
 	vector<IMU_330_IMU_RAWCOUNTS> m_imu_rawcount_list;
     vector<IMU_330_IMU_SCALEDS> m_imu_scaled_list;
     vector<IMU_330_IMU_CALIBRATEDS> m_imu_calibrated_list;
+	vector<IMU_330_GET_VALUE> m_imu_get_value_list;
 	int counter_A1;
 	int counter_A2;
 	int counter_C1;
 	int counter_F1;
 	int counter_F2;
 	int counter_F3;
+	int counter_11;
 };
 

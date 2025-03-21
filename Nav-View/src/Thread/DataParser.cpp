@@ -60,6 +60,30 @@ void DataParser::processIMU330(QByteArray array)
 			ThreadManager::Instance().m_DetectionThread->m_WaitCondition.notify_all();
             ThreadManager::Instance().m_DetectionThread->m_Mutex.unlock();
 		}
+		else if (ret == 0x11) {
+			IMU_330_GET_VALUE* pImu = m_IMU330_Decoder->get_imu_get_value();
+			if (pImu->reg_id == 0x0040) {
+				DataCache::Instance().addIMUGetValues_A1(pImu);
+				emit sgnUpdate(ret);
+			}
+			else if (pImu->reg_id == 0x0041) {
+				DataCache::Instance().addIMUGetValues_F1(pImu);
+				emit sgnUpdate(ret);
+			}
+			else if (pImu->reg_id == 0x0042) {
+				DataCache::Instance().addIMUGetValues_F2(pImu);
+				emit sgnUpdate(ret);
+			}
+			else if (pImu->reg_id == 0x0043) {
+				DataCache::Instance().addIMUGetValues_F3(pImu);
+				emit sgnUpdate(ret);
+			}
+			else
+			{
+				DataCache::Instance().addIMUGetValues(pImu);
+				emit sgnUpdate(ret);
+			}
+		}
 		else if(ret != 0){
 			//TODO: get value from decoder
 			emit sgnUpdateValues(ret,array);

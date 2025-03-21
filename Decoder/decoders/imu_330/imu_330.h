@@ -143,6 +143,12 @@ typedef struct {
     float temperature;  // [¡æ]
 }IMU_330_IMU_CALIBRATEDS;
 
+typedef struct {
+    uint8_t bank;      
+    uint16_t reg_id;      
+    uint8_t reg_value;      
+    uint8_t rc;       
+}IMU_330_GET_VALUE;
 //typedef struct {
 //    float accel_x;      // [m/s/s]
 //    float accel_y;      // [m/s/s]
