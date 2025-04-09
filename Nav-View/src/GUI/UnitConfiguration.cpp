@@ -94,6 +94,9 @@ UnitConfiguration::UnitConfiguration(QWidget *parent)
     ui.combo_PacketRate->addItem("100 Hz");
     ui.combo_PacketRate->addItem("200 Hz");
 
+	ui.combo_UART->addItem("uart1");
+    ui.combo_UART->addItem("uart2");
+
     connect(ThreadManager::Instance().m_DataParser, SIGNAL(sgnUpdate(int)), this, SLOT(onUpdateValues(int)), Qt::QueuedConnection);
     connect(ui.getValues, &QPushButton::clicked, this, &UnitConfiguration::on_GetAllValues_clicked);
     connect(ui.setValues, &QPushButton::clicked, this, &UnitConfiguration::on_SetAllValues_clicked);
@@ -157,7 +160,8 @@ void UnitConfiguration::onUpdateValues(int type)
 void UnitConfiguration::on_GetAllValues_clicked()
 {
     QByteArray packet;
-    if (ui.check_BaudRate->isChecked())
+    QString uart = ui.combo_UART->currentText();
+    if (ui.check_BaudRate->isChecked() && uart == "uart1")
     {
 
         // 包头
@@ -181,39 +185,95 @@ void UnitConfiguration::on_GetAllValues_clicked()
 
         // 发送数据包
         emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
+    }else if (ui.check_BaudRate->isChecked() && uart == "uart2")
+    {
+
+        // 包头
+        packet.append(static_cast<char>(0xA5));
+        packet.append(static_cast<char>(0x96));
+
+        // 数据部分
+        QByteArray data;
+        data.append(static_cast<char>(0x11));
+        data.append(static_cast<char>(0x03));
+        data.append(static_cast<char>(0x01));
+        data.append(static_cast<char>(0x01));
+        data.append(static_cast<char>(0x00));
+
+        // 计算CRC校验值
+        uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
+        packet.append(data);
+        packet.append(static_cast<char>(crc & 0xFF));
+        packet.append(static_cast<char>(crc >> 8));
+
+
+        // 发送数据包
+        emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
     }
 
     // 处理数据包类型
     if (ui.check_PacketType->isChecked() || ui.check_PacketRate->isChecked())
     {
-        for (int i = 0; i < 4; i++)
+        if(uart == "uart1")
         {
-            packet.clear();
-        // 包头
-            packet.append(static_cast<char>(0xA5));
-            packet.append(static_cast<char>(0x96));
+            for (int i = 0; i < 4; i++)
+            {
+                packet.clear();
+                // 包头
+                packet.append(static_cast<char>(0xA5));
+                packet.append(static_cast<char>(0x96));
 
-        // 数据部分
-            QByteArray data;
-            data.append(static_cast<char>(0x11));
-            data.append(static_cast<char>(0x03));
-            data.append(static_cast<char>(0x01));
-		
-		
-			uint8_t packetType = 0x40 + i;
-			data.append(static_cast<char>(packetType));
-            data.append(static_cast<char>(0x00));
-            // 计算CRC校验值
-            uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
-            packet.append(data);
-            packet.append(static_cast<char>(crc & 0xFF));
-            packet.append(static_cast<char>(crc >> 8));
-            
-            // 发送数据包
-            emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
-            QThread::msleep(10);
-		}
-        
+                // 数据部分
+                QByteArray data;
+                data.append(static_cast<char>(0x11));
+                data.append(static_cast<char>(0x03));
+                data.append(static_cast<char>(0x01));
+
+
+                uint8_t packetType = 0x40 + i;
+                data.append(static_cast<char>(packetType));
+                data.append(static_cast<char>(0x00));
+                // 计算CRC校验值
+                uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
+                packet.append(data);
+                packet.append(static_cast<char>(crc & 0xFF));
+                packet.append(static_cast<char>(crc >> 8));
+
+                // 发送数据包
+                emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
+                QThread::msleep(10);
+            }
+        }
+        if (uart == "uart2")
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                packet.clear();
+                // 包头
+                packet.append(static_cast<char>(0xA5));
+                packet.append(static_cast<char>(0x96));
+
+                // 数据部分
+                QByteArray data;
+                data.append(static_cast<char>(0x11));
+                data.append(static_cast<char>(0x03));
+                data.append(static_cast<char>(0x01));
+
+
+                uint8_t packetType = 0x60 + i;
+                data.append(static_cast<char>(packetType));
+                data.append(static_cast<char>(0x00));
+                // 计算CRC校验值
+                uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
+                packet.append(data);
+                packet.append(static_cast<char>(crc & 0xFF));
+                packet.append(static_cast<char>(crc >> 8));
+
+                // 发送数据包
+                emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
+                QThread::msleep(10);
+            }
+        }
         
     }
 
@@ -225,23 +285,47 @@ void UnitConfiguration::on_GetAllValues_clicked()
 
 static void silence_device()
 {
-    for (int i = 0; i < 3; i++) {
+    /*for (int i = 0; i < 3; i++) {*/
         char data1[] = { static_cast<char>(0xA5), static_cast<char>(0x96), static_cast<char>(0x12), static_cast<char>(0x04), static_cast<char>(0x01), static_cast<char>(0x40), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xCB), static_cast<char>(0x7D) };
         QByteArray packet1(data1, sizeof(data1));
         emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet1);
+        QThread::msleep(10);
 
         char data2[] = { static_cast<char>(0xA5), static_cast<char>(0x96), static_cast<char>(0x12), static_cast<char>(0x04), static_cast<char>(0x01), static_cast<char>(0x41), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xFB), static_cast<char>(0x4A) };
         QByteArray packet2(data2, sizeof(data2));
         emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet2);
+        QThread::msleep(10);
 
         char data3[] = { static_cast<char>(0xA5), static_cast<char>(0x96), static_cast<char>(0x12), static_cast<char>(0x04), static_cast<char>(0x01), static_cast<char>(0x42), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0xAB), static_cast<char>(0x13) };
         QByteArray packet3(data3, sizeof(data3));
         emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet3);
+        QThread::msleep(10);
 
         char data4[] = { static_cast<char>(0xA5), static_cast<char>(0x96), static_cast<char>(0x12), static_cast<char>(0x04), static_cast<char>(0x01), static_cast<char>(0x43), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x9B), static_cast<char>(0x24) };
         QByteArray packet4(data4, sizeof(data4));
         emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet4);
-    }
+        QThread::msleep(10);
+
+        char data5[] = { static_cast<char>(0xA5), static_cast<char>(0x96), static_cast<char>(0x12), static_cast<char>(0x04), static_cast<char>(0x01), static_cast<char>(0x60), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x0D), static_cast<char>(0xFB) };
+        QByteArray packet5(data5, sizeof(data5));
+        emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet5);
+        QThread::msleep(10);
+
+        char data6[] = { static_cast<char>(0xA5), static_cast<char>(0x96), static_cast<char>(0x12), static_cast<char>(0x04), static_cast<char>(0x01), static_cast<char>(0x61), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x3D), static_cast<char>(0xCC) };
+        QByteArray packet6(data6, sizeof(data6));
+        emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet6);
+        QThread::msleep(10);
+
+        char data7[] = { static_cast<char>(0xA5), static_cast<char>(0x96), static_cast<char>(0x12), static_cast<char>(0x04), static_cast<char>(0x01), static_cast<char>(0x62), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x6D), static_cast<char>(0x95) };
+        QByteArray packet7(data7, sizeof(data7));
+        emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet7);
+        QThread::msleep(10);
+
+        char data8[] = { static_cast<char>(0xA5), static_cast<char>(0x96), static_cast<char>(0x12), static_cast<char>(0x04), static_cast<char>(0x01), static_cast<char>(0x63), static_cast<char>(0x00), static_cast<char>(0x00), static_cast<char>(0x5D), static_cast<char>(0xA2) };
+        QByteArray packet8(data8, sizeof(data8));
+        emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet8);
+        QThread::msleep(10);
+    //}
 }
 
 
@@ -249,12 +333,13 @@ static void silence_device()
 void UnitConfiguration::on_SetAllValues_clicked()
 {
     QByteArray packet;
+	QString uart = ui.combo_UART->currentText();
 	silence_device();
    /* if (ui.check_BaudRate->isChecked()) {
         emit ThreadManager::Instance().m_SerialThread->sgnWrite("save BAUDRATE " + ui.combo_BaudRatet->currentText().toLocal8Bit());
     }*/
     // 处理波特率
-    if (ui.check_BaudRate->isChecked()) {
+    if (ui.check_BaudRate->isChecked()&& uart == "uart1") {
         
         // 包头
         packet.append(static_cast<char>(0xA5));
@@ -277,15 +362,47 @@ void UnitConfiguration::on_SetAllValues_clicked()
         // 计算CRC校验值
         uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
         packet.append(data);
-        packet.append(static_cast<char>(crc >> 8));
         packet.append(static_cast<char>(crc & 0xFF));
+        packet.append(static_cast<char>(crc >> 8));
+        
+
+        // 发送数据包
+        emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
+    }
+    else if (ui.check_BaudRate->isChecked() && uart == "uart2") {
+
+        // 包头
+        packet.append(static_cast<char>(0xA5));
+        packet.append(static_cast<char>(0x96));
+
+        // 数据部分
+        QByteArray data;
+        data.append(static_cast<char>(0x12));
+        data.append(static_cast<char>(0x04));
+        data.append(static_cast<char>(0x01));
+        data.append(static_cast<char>(0x01));
+        data.append(static_cast<char>(0x00));
+
+        // 添加波特率对应的16进制数据
+        QString selectedBaudRate = ui.combo_BaudRatet->currentText();
+        if (baudRateMap.contains(selectedBaudRate)) {
+            data.append(baudRateMap[selectedBaudRate]);
+        }
+
+        // 计算CRC校验值
+        uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
+        packet.append(data);
+        packet.append(static_cast<char>(crc & 0xFF));
+        packet.append(static_cast<char>(crc >> 8));
+        
 
         // 发送数据包
         emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
     }
 
     // 处理数据包类型
-    if (ui.check_PacketType->isChecked()) { // 假设存在名为 check_PacketType 的复选框
+    if (ui.check_PacketType->isChecked() && uart == "uart1") 
+    { 
         
         // 包头
         packet.append(static_cast<char>(0xA5));
@@ -313,13 +430,68 @@ void UnitConfiguration::on_SetAllValues_clicked()
         // 计算CRC校验值
         uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
         packet.append(data);
-        packet.append(static_cast<char>(crc >> 8));
         packet.append(static_cast<char>(crc & 0xFF));
+        packet.append(static_cast<char>(crc >> 8));
+       
 
         // 发送数据包
         emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
     }
+    else if (ui.check_PacketType->isChecked() && uart == "uart2")
+    {
+        // 包头
+        packet.append(static_cast<char>(0xA5));
+        packet.append(static_cast<char>(0x96));
 
+        // 数据部分
+        QByteArray data;
+        data.append(static_cast<char>(0x12));
+        data.append(static_cast<char>(0x04));
+        data.append(static_cast<char>(0x01));
+        QString selectedPacketType = ui.combo_PacketType->currentText();
+        if (packetTypeMap.contains(selectedPacketType)) {
+            QByteArray packetTypeData = packetTypeMap[selectedPacketType];
+            packetTypeData[0] = static_cast<char>(packetTypeData[0] + 0x20);
+            data.append(packetTypeData);
+        }
+        if (ui.check_PacketRate->isChecked()) {
+             
+            QString selectedPacketRate = ui.combo_PacketRate->currentText();
+            if (PacketRateMap.contains(selectedPacketRate)) {
+                data.append(PacketRateMap[selectedPacketRate]);
+            }
+            else {
+                data.append(static_cast<char>(0x09));
+            }
+        }
+        // 计算CRC校验值
+        uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
+        packet.append(data);
+        packet.append(static_cast<char>(crc & 0xFF));
+        packet.append(static_cast<char>(crc >> 8));
+        
+
+        // 发送数据包
+        emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
+
+    }
+	if (ui.radioButton_2->isChecked()) {
+		// 包头
+		packet.append(static_cast<char>(0xA5));
+		packet.append(static_cast<char>(0x96));
+		// 数据部分
+		QByteArray data;
+		data.append(static_cast<char>(0x13));
+		data.append(static_cast<char>(0x00));
+		
+		// 计算CRC校验值
+		uint16_t crc = crc16_false(reinterpret_cast<uint8_t*>(data.data()), data.length());
+		packet.append(data);
+		packet.append(static_cast<char>(crc & 0xFF));
+		packet.append(static_cast<char>(crc >> 8));
+		// 发送数据包
+		emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);
+	}
     // 发送数据包
     if (!packet.isEmpty()) {
         emit ThreadManager::Instance().m_SerialThread->sgnWrite(packet);

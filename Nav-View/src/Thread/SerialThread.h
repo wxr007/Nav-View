@@ -37,5 +37,5 @@ public slots:
     void onWrite(const QByteArray data);
 signals:
     void sgnDataSize(const int);
-    void sgnWrite(const QByteArray data);
+    
 };

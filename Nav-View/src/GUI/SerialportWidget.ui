@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Serialport</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../logo.ico</normaloff>../../logo.ico</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0" columnstretch="0,1,0" rowminimumheight="0,0">

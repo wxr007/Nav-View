@@ -7,5 +7,6 @@
         <file>res/img/add_right.png</file>
         <file>res/img/add_top.png</file>
         <file>res/img/logo.png</file>
+        <file>logo.ico</file>
     </qresource>
 </RCC>

@@ -62,19 +62,19 @@ void DataParser::processIMU330(QByteArray array)
 		}
 		else if (ret == 0x11) {
 			IMU_330_GET_VALUE* pImu = m_IMU330_Decoder->get_imu_get_value();
-			if (pImu->reg_id == 0x0040) {
+			if (pImu->reg_id == 0x0040|| pImu->reg_id == 0x0060) {
 				DataCache::Instance().addIMUGetValues_A1(pImu);
 				emit sgnUpdate(ret);
 			}
-			else if (pImu->reg_id == 0x0041) {
+			else if (pImu->reg_id == 0x0041 || pImu->reg_id == 0x0061) {
 				DataCache::Instance().addIMUGetValues_F1(pImu);
 				emit sgnUpdate(ret);
 			}
-			else if (pImu->reg_id == 0x0042) {
+			else if (pImu->reg_id == 0x0042 || pImu->reg_id == 0x0062) {
 				DataCache::Instance().addIMUGetValues_F2(pImu);
 				emit sgnUpdate(ret);
 			}
-			else if (pImu->reg_id == 0x0043) {
+			else if (pImu->reg_id == 0x0043 || pImu->reg_id == 0x0063) {
 				DataCache::Instance().addIMUGetValues_F3(pImu);
 				emit sgnUpdate(ret);
 			}
